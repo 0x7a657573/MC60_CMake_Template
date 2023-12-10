@@ -51,9 +51,7 @@
 /****************************************************************************
  * Type Definitions
  ***************************************************************************/
-#ifndef bool
 typedef unsigned char       bool;
-#endif
 typedef unsigned char       u8;
 typedef signed   char       s8;
 typedef unsigned short      u16;
@@ -63,5 +61,8 @@ typedef          int        s32;
 typedef unsigned long long  u64;
 typedef          long long  s64;
 typedef unsigned int        ticks;
+typedef unsigned char  		byte;
+typedef unsigned int   word32;
+typedef unsigned int    mp_digit; 
 
 #endif  // End-of __QL_TYPE_H__

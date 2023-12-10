@@ -11,7 +11,8 @@ set(CMAKE_TOOLCHAIN_FILE ${CMAKE_SOURCE_DIR}/arm-none-eabi-gcc.cmake)
 # Setup project, output and linker file
 project(mc60cmake)
 set(EXECUTABLE ${PROJECT_NAME}.elf)
-set(LINKER_SECTIONS ${CMAKE_SOURCE_DIR}/libs/gcc/linkscript.ld)
+
+set(MCU "MC60" CACHE STRING "Default target is MC60")
 
 
 enable_language(C ASM)
@@ -27,7 +28,7 @@ message(STATUS "CMAKE_TOOLCHAIN_FILE is: ${CMAKE_TOOLCHAIN_FILE}")
 # List of source files
 set(SRC_FILES
         config/sys_config.c
-        config/inc/custom_sys_cfg.c
+        config/custom_sys_cfg.c
 
         # inlude ril librarry
         ril/src/ril_system.c
@@ -49,19 +50,26 @@ set(SRC_FILES
         ril/src/ril_urc.c
         ril/src/ril_util.c
         ril/src/ril_atResponse.c
-        ril/src/ril_ftp.c
+        ril/src/ril_ftp.c 
 
-        
         src/main.c        
         )
 
-        
+if(MCU STREQUAL "MC60")
+        set(LINKER_SECTIONS ${CMAKE_SOURCE_DIR}/libs/gcc/MC60/linkscript.ld)
+elseif(MCU STREQUAL "MC60E")
+        list(APPEND SRC_FILES 
+                ril/src/ril_ble_clinet.c                        
+        )
+        set(LINKER_SECTIONS ${CMAKE_SOURCE_DIR}/libs/gcc/MC60E/linkscript.ld)
+endif()
+
 # Build the executable based on the source files
 add_executable(${EXECUTABLE} ${SRC_FILES})
 
 # List of includ directories
 target_include_directories(${EXECUTABLE} PRIVATE
-        config/inc
+        config/inc/
         ril/inc
         include
         )
@@ -88,6 +96,11 @@ target_compile_options(${EXECUTABLE} PRIVATE
         
         -Wall
         -Os
+
+        # -----------------------------------------
+        -mfpu=vfp 
+        -Wstrict-prototypes 
+        -std=c99 
         )
 
 # Linker options
@@ -111,6 +124,8 @@ target_link_options(${EXECUTABLE} PRIVATE
         -Xlinker --gc-sections
         -Wl,-Map=${PROJECT_NAME}.map,--cref
         -Wl,--gc-sections
+
+
         #-Xlinker -print-memory-usage -Xlinker
         )
 
@@ -130,6 +145,6 @@ add_custom_command(TARGET ${EXECUTABLE}
 add_custom_command(TARGET ${EXECUTABLE}
         POST_BUILD
         COMMAND ${CMAKE_OBJCOPY} -O binary ${EXECUTABLE} ${PROJECT_NAME}.bin
-        COMMAND ${CMAKE_SOURCE_DIR}/tools/makeGFH.py ${PROJECT_NAME}.bin
+        COMMAND ${CMAKE_SOURCE_DIR}/tools/makeGFH.py ${PROJECT_NAME}.bin ${MCU}
         COMMAND echo ${PROJECT_NAME}HDR.bin > ${PROJECT_NAME}.cfg
         )

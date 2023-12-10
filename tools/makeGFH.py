@@ -6,9 +6,9 @@ import struct
 import datetime
 from os.path import join
 
-arguments = len(sys.argv) - 1
+arguments = len(sys.argv) - 2
 if arguments!=1:
-	exit("Error Input Paramiter")
+	exit("Error Input Parameter")
 
 def makeHDR( dat ):   
     bin = dat.replace(".bin", "HDR.bin")
@@ -17,7 +17,16 @@ def makeHDR( dat ):
     arr = [0x4D, 0x4D, 0x4D, 0x01, 0x40, 0x00, 0x00, 0x00, 0x46, 0x49, 0x4C, 0x45, 0x5F, 0x49, 0x4E, 0x46]
     data = bytearray(arr)
     dst.write(data) 
-    arr = [0x4F, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x70, 0x07, 0x00, 0x00, 0xB0, 0x2D, 0x10] #MC60
+    if mcu_name == "MC60":
+        print("MCU is MC60")
+        arr = [0x4F, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x70, 0x07, 0x00, 0x00, 0xB0, 0x2D, 0x10]
+    elif mcu_name == "MC60E":
+        print("MCU is MC60E")
+        arr = [0x4F, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x70, 0x07, 0x00, 0x00, 0xD0, 0x30, 0x10]
+    else:
+        print("ERROR: MCU does not specified")
+        dst.close() 
+        return
     data = bytearray(arr)
     dst.write(data) 
     
@@ -49,6 +58,7 @@ def makeCFG( dat ):
 
 src_size = os.stat( sys.argv[1] ).st_size + 64
 src_name = os.path.basename(sys.argv[1])
+mcu_name = sys.argv[2]
 makeHDR(sys.argv[1])
 makeCFG(sys.argv[1])
 print ("File Name %s" % (src_name))
