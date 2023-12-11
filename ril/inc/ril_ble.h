@@ -178,7 +178,7 @@ s32 RIL_BLE_Initialize(CALLBACK_BLE_IND cb);
 *
 * Parameters:
 *               op:[In] Register or deregister a GATT server. 0 means deregister and 1 means register.
-                 gserv :[In] Pointer to the ¡°ST_BLE_Server¡± struct
+                 gserv :[In] Pointer to the ï¿½ï¿½ST_BLE_Serverï¿½ï¿½ struct
 
 *
 * Return:        
@@ -199,7 +199,7 @@ s32 RIL_BT_Gatsreg(u8 op , ST_BLE_Server* gserv);
 *
 * Parameters:
 *                op :[In] Add or remove a service. 0 means remove and 1 means add.
-                  gserv :[In] Pointer to the ¡°ST_BLE_Serve¡± struct.
+                  gserv :[In] Pointer to the ï¿½ï¿½ST_BLE_Serveï¿½ï¿½ struct.
 
 * Return:        
 *               RIL_AT_SUCCESS: indicates the AT command is executed successfully, and the response is OK.
@@ -220,7 +220,7 @@ s32 RIL_BT_Gatss(u8 op , ST_BLE_Server* gserv);
 *
 * Parameters:
 *               op :[In] Adding one characteristic at a time is supported and deleting characteristic is not supported currently.
-                 gserv :[in]  Pointer to the ¡°ST_BLE_Server¡± struct.
+                 gserv :[in]  Pointer to the ï¿½ï¿½ST_BLE_Serverï¿½ï¿½ struct.
 
 *
 * Return:        
@@ -243,7 +243,7 @@ s32 RIL_BT_Gatsc(u8 op , ST_BLE_Server* gserv);
 *
 * Parameters:
 *               op :[In]Adding one descriptor at a time is supported and deleting descriptor is not supported currently
-                gserv :[in]  Pointer to the ¡°ST_BLE_Server¡± struct.
+                gserv :[in]  Pointer to the ï¿½ï¿½ST_BLE_Serverï¿½ï¿½ struct.
 
 *
 * Return:        
@@ -266,7 +266,7 @@ s32 RIL_BT_Gatsd(u8 op , ST_BLE_Server* gserv);
 *
 * Parameters:
 *               op :[in]   Start or stop a service. 0 means stop and 1 means start
-                gserv :[in]  Pointer to the ¡°ST_BLE_Server¡± struct.
+                gserv :[in]  Pointer to the ï¿½ï¿½ST_BLE_Serverï¿½ï¿½ struct.
 
 *
 * Return:        
@@ -288,7 +288,7 @@ s32 RIL_BT_Gatsst(u8 op , ST_BLE_Server* gserv);
 *               Send an indication to client
 *
 * Parameters:
-                gserv :[in] Pointer to the ¡°ST_BLE_Server¡± struct.
+                gserv :[in] Pointer to the ï¿½ï¿½ST_BLE_Serverï¿½ï¿½ struct.
 
 *
 * Return:        
@@ -310,7 +310,7 @@ s32 RIL_BT_Gatsind(ST_BLE_Server* gserv);
 *               This function responses to the read or write request from client
 *
 * Parameters:
-                gserv :[in]  Pointer to the ¡°ST_BLE_Server¡± struct.
+                gserv :[in]  Pointer to the ï¿½ï¿½ST_BLE_Serverï¿½ï¿½ struct.
 
 *
 * Return:        
@@ -332,7 +332,7 @@ s32 RIL_BT_Gatsrsp(ST_BLE_Server* gserv);
 *
 * Parameters:
                 op  :[in]  Start or stop advertising. 0 means stop and 1 means start.
-                gserv :[in] Pointer to the ¡°ST_BLE_Server¡± struct.
+                gserv :[in] Pointer to the ï¿½ï¿½ST_BLE_Serverï¿½ï¿½ struct.
 
 *
 * Return:        

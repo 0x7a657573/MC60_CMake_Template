@@ -444,6 +444,23 @@ u32 Ql_OS_GetCurrenTaskLeftStackSize(void);
 *****************************************************************/
 s32 Ql_OS_GetActiveTaskId(void);
 
+typedef void(*Callback_MQTT_Recvhandler)(u8* buffer,u32 length);
+/******************************************************************************
+* Function:     Ql_Mqtt_Recv_Register
+*
+* Description:
+*               Register callback for receiving data.When the module receives downlink data, call particular callback.
+* 
+*
+* Parameters:
+*              Callback_Urc_Handle:
+*                       [out] Register a callback to process downlink data.
+
+* Return:
+*                QL_RET_OK,successfully.
+*                QL_RET_ERR_PARAM, Parameter error, maybe callback is NULL.
+******************************************************************************/
+s32 Ql_Mqtt_Recv_Register(Callback_MQTT_Recvhandler callback_mqtt_recv);
 
 #ifdef TASK_ENTRYFUNC_DEF
 #undef TASK_ENTRYFUNC_DEF
