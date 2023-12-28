@@ -1348,7 +1348,7 @@ void OnURCHandler_BTConn(const char* strURC, void* reserved)
 s32 RIL_BT_SPP_DirectConn(char* btMacAddr, u8 mode, char* pinCode)
 {
 
-    char strAT[20];
+    char strAT[64];
 
     if(NULL == btMacAddr)
     {

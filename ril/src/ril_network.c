@@ -77,13 +77,13 @@ static s32 ATResponse_CREG_Handler(char* line, u32 len, void* userdata)
         return  RIL_ATRSP_CONTINUE;
     }
 
-   head = Ql_RIL_FindLine(line, len, "OK"); // find <CR><LF>OK<CR><LF>, <CR>OK<CR>£¬<LF>OK<LF>
+   head = Ql_RIL_FindLine(line, len, "OK"); // find <CR><LF>OK<CR><LF>, <CR>OK<CR>ï¿½ï¿½<LF>OK<LF>
    if(head)
    {
        return  RIL_ATRSP_SUCCESS;
    }
 
-    head = Ql_RIL_FindLine(line, len, "ERROR");// find <CR><LF>ERROR<CR><LF>, <CR>ERROR<CR>£¬<LF>ERROR<LF>
+    head = Ql_RIL_FindLine(line, len, "ERROR");// find <CR><LF>ERROR<CR><LF>, <CR>ERROR<CR>ï¿½ï¿½<LF>ERROR<LF>
     if(head)
     {  
         return  RIL_ATRSP_FAILED;
@@ -165,13 +165,13 @@ static s32 ATResponse_CGREG_Handler(char* line, u32 len, void* userdata)
         return  RIL_ATRSP_CONTINUE;
     }
 
-   head = Ql_RIL_FindLine(line, len, "OK"); // find <CR><LF>OK<CR><LF>, <CR>OK<CR>£¬<LF>OK<LF>
+   head = Ql_RIL_FindLine(line, len, "OK"); // find <CR><LF>OK<CR><LF>, <CR>OK<CR>ï¿½ï¿½<LF>OK<LF>
    if(head)
    {  
        return  RIL_ATRSP_SUCCESS;
    }
 
-    head = Ql_RIL_FindLine(line, len, "ERROR");// find <CR><LF>ERROR<CR><LF>, <CR>ERROR<CR>£¬<LF>ERROR<LF>
+    head = Ql_RIL_FindLine(line, len, "ERROR");// find <CR><LF>ERROR<CR><LF>, <CR>ERROR<CR>ï¿½ï¿½<LF>ERROR<LF>
     if(head)
     {  
         return  RIL_ATRSP_FAILED;
@@ -254,13 +254,13 @@ static s32 ATResponse_CSQ_Handler(char* line, u32 len, void* userdata)
         return  RIL_ATRSP_CONTINUE;
     }
 
-    head = Ql_RIL_FindLine(line, len, "OK"); // find <CR><LF>OK<CR><LF>, <CR>OK<CR>£¬<LF>OK<LF>
+    head = Ql_RIL_FindLine(line, len, "OK"); // find <CR><LF>OK<CR><LF>, <CR>OK<CR>ï¿½ï¿½<LF>OK<LF>
     if(head)
     {  
         return  RIL_ATRSP_SUCCESS;
     }
 
-    head = Ql_RIL_FindLine(line, len, "ERROR");// find <CR><LF>ERROR<CR><LF>, <CR>ERROR<CR>£¬<LF>ERROR<LF>
+    head = Ql_RIL_FindLine(line, len, "ERROR");// find <CR><LF>ERROR<CR><LF>, <CR>ERROR<CR>ï¿½ï¿½<LF>ERROR<LF>
     if(head)
     {  
         return  RIL_ATRSP_FAILED;
@@ -421,13 +421,13 @@ static s32 ATResponse_IPStatus_Handler(char* line, u32 len, void* userdata)
         return  RIL_ATRSP_SUCCESS;
     }
 
-    head = Ql_RIL_FindLine(line, len, "OK"); // find <CR><LF>OK<CR><LF>, <CR>OK<CR>£¬<LF>OK<LF>
+    head = Ql_RIL_FindLine(line, len, "OK"); // find <CR><LF>OK<CR><LF>, <CR>OK<CR>ï¿½ï¿½<LF>OK<LF>
     if(head)
     {  
        return  RIL_ATRSP_CONTINUE;
     }
 
-    head = Ql_RIL_FindLine(line, len, "ERROR");// find <CR><LF>ERROR<CR><LF>, <CR>ERROR<CR>£¬<LF>ERROR<LF>
+    head = Ql_RIL_FindLine(line, len, "ERROR");// find <CR><LF>ERROR<CR><LF>, <CR>ERROR<CR>ï¿½ï¿½<LF>ERROR<LF>
     if(head)
     {  
         *result = IP_INITIAL;
@@ -520,13 +520,13 @@ static s32 ATRsp_COPS_Handler(char* line, u32 len, void* param)
         return  RIL_ATRSP_SUCCESS;
     }
 
-   pHead = Ql_RIL_FindLine(line, len, "OK"); // find <CR><LF>OK<CR><LF>, <CR>OK<CR>£¬<LF>OK<LF>
+   pHead = Ql_RIL_FindLine(line, len, "OK"); // find <CR><LF>OK<CR><LF>, <CR>OK<CR>ï¿½ï¿½<LF>OK<LF>
    if (pHead)
    {  
        return  RIL_ATRSP_SUCCESS;
    }
 
-    pHead = Ql_RIL_FindLine(line, len, "ERROR");// find <CR><LF>ERROR<CR><LF>, <CR>ERROR<CR>£¬<LF>ERROR<LF>
+    pHead = Ql_RIL_FindLine(line, len, "ERROR");// find <CR><LF>ERROR<CR><LF>, <CR>ERROR<CR>ï¿½ï¿½<LF>ERROR<LF>
     if (pHead)
     {  
         return  RIL_ATRSP_FAILED;

@@ -395,7 +395,7 @@ static s32 ATResponse_AUD_handler(char* line, u32 len, void* userdata)
             }
         return  RIL_ATRSP_CONTINUE;
     }
-    else if(head =Ql_RIL_FindString(line, len, "+QMIC:"))
+    else if(head == Ql_RIL_FindString(line, len, "+QMIC:"))
     {
         *(u8* )userdata = parse_cmd_qmic(head,(u8)s_channel_qmic);
         return  RIL_ATRSP_CONTINUE;

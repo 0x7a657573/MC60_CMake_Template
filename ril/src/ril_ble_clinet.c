@@ -526,7 +526,7 @@ void OnURCHandler_BTGatcscan(const char* strURC, void* reserved)
     
 }
 
-//+QBTGATCCON: 1,0,ï¿½ï¿½ABCDï¿½ï¿½,2711C92E38C6,1
+//+QBTGATCCON: 1,0,¡°ABCD¡±,2711C92E38C6,1
 void OnURCHandler_BTGatccon(const char* strURC, void* reserved)
 {
     s32 err_code = 0;
@@ -753,7 +753,7 @@ static s32 ATRsp_QBTGatcreg_Hdlr(char* line, u32 len, void* param)
         return  RIL_ATRSP_CONTINUE;
     }
 
-    pHead = Ql_RIL_FindLine(line, len, "OK"); // find <CR><LF>OK<CR><LF>, <CR>OK<CR>ï¿½ï¿½<LF>OK<LF>
+    pHead = Ql_RIL_FindLine(line, len, "OK"); // find <CR><LF>OK<CR><LF>, <CR>OK<CR>£¬<LF>OK<LF>
     if (pHead)
     {  
         return RIL_ATRSP_SUCCESS;
@@ -761,7 +761,7 @@ static s32 ATRsp_QBTGatcreg_Hdlr(char* line, u32 len, void* param)
 
    gclie_op->result = RIL_ATRSP_FAILED;
 
-    pHead = Ql_RIL_FindLine(line, len, "ERROR");// find <CR><LF>ERROR<CR><LF>, <CR>ERROR<CR>ï¿½ï¿½<LF>ERROR<LF>
+    pHead = Ql_RIL_FindLine(line, len, "ERROR");// find <CR><LF>ERROR<CR><LF>, <CR>ERROR<CR>£¬<LF>ERROR<LF>
     if (pHead)
     {  
         return  RIL_ATRSP_FAILED;
@@ -789,7 +789,7 @@ static s32 ATRsp_QBTGatcscan_Hdlr(char* line, u32 len, void* param)
         return  RIL_ATRSP_CONTINUE;
     }
 
-    pHead = Ql_RIL_FindLine(line, len, "OK"); // find <CR><LF>OK<CR><LF>, <CR>OK<CR>ï¿½ï¿½<LF>OK<LF>
+    pHead = Ql_RIL_FindLine(line, len, "OK"); // find <CR><LF>OK<CR><LF>, <CR>OK<CR>£¬<LF>OK<LF>
     if (pHead)
     {  
         return RIL_ATRSP_SUCCESS;
@@ -797,7 +797,7 @@ static s32 ATRsp_QBTGatcscan_Hdlr(char* line, u32 len, void* param)
 
     gclie_op->result = RIL_ATRSP_FAILED;
 
-    pHead = Ql_RIL_FindLine(line, len, "ERROR");// find <CR><LF>ERROR<CR><LF>, <CR>ERROR<CR>ï¿½ï¿½<LF>ERROR<LF>
+    pHead = Ql_RIL_FindLine(line, len, "ERROR");// find <CR><LF>ERROR<CR><LF>, <CR>ERROR<CR>£¬<LF>ERROR<LF>
     if (pHead)
     {  
         return  RIL_ATRSP_FAILED;
@@ -836,13 +836,13 @@ static s32 ATRsp_QBTGatcrn_Hdlr(char* line, u32 len, void* param)
         return  RIL_ATRSP_CONTINUE;
 	}
 	
-	pHead = Ql_RIL_FindLine(line, len, "OK"); // find <CR><LF>OK<CR><LF>, <CR>OK<CR>ï¿½ï¿½<LF>OK<LF>
+	pHead = Ql_RIL_FindLine(line, len, "OK"); // find <CR><LF>OK<CR><LF>, <CR>OK<CR>£¬<LF>OK<LF>
 	if (pHead)
 	{  
 		return RIL_ATRSP_SUCCESS;
 	}
 	
-	pHead = Ql_RIL_FindLine(line, len, "ERROR");// find <CR><LF>ERROR<CR><LF>, <CR>ERROR<CR>ï¿½ï¿½<LF>ERROR<LF>
+	pHead = Ql_RIL_FindLine(line, len, "ERROR");// find <CR><LF>ERROR<CR><LF>, <CR>ERROR<CR>£¬<LF>ERROR<LF>
 	if (pHead)
 	{  
 		return	RIL_ATRSP_FAILED;
@@ -868,7 +868,7 @@ static s32 ATRsp_QBTGatcgdt_Hdlr(char* line, u32 len, void* param)
         return  RIL_ATRSP_CONTINUE;
     }
 */
-    pHead = Ql_RIL_FindLine(line, len, "OK"); // find <CR><LF>OK<CR><LF>, <CR>OK<CR>ï¿½ï¿½<LF>OK<LF>
+    pHead = Ql_RIL_FindLine(line, len, "OK"); // find <CR><LF>OK<CR><LF>, <CR>OK<CR>£¬<LF>OK<LF>
     if (pHead)
     {  
         return RIL_ATRSP_SUCCESS;
@@ -876,7 +876,7 @@ static s32 ATRsp_QBTGatcgdt_Hdlr(char* line, u32 len, void* param)
 
    gclie_op->result = RIL_ATRSP_FAILED;
 
-    pHead = Ql_RIL_FindLine(line, len, "ERROR");// find <CR><LF>ERROR<CR><LF>, <CR>ERROR<CR>ï¿½ï¿½<LF>ERROR<LF>
+    pHead = Ql_RIL_FindLine(line, len, "ERROR");// find <CR><LF>ERROR<CR><LF>, <CR>ERROR<CR>£¬<LF>ERROR<LF>
     if (pHead)
     {  
         return  RIL_ATRSP_FAILED;
