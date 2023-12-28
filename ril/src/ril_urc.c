@@ -41,6 +41,7 @@
 #include "ril_audio.h"
 #include "ril_ftp.h"
 #include "ril_http.h"
+#include "ril_system.h"
 
 #ifdef __OCPU_RIL_SUPPORT__
 
@@ -48,7 +49,7 @@
 /* Definition for URC receive task id.                                  */
 /************************************************************************/
 #define URC_RCV_TASK_ID  main_task_id
-
+MQTT_Urc_Param_t   mqtt_urc_param =  {0,0,255,255,255,255,{255}}; //<for mqtt
 /************************************************************************/
 /* Declarations for URC handler.                                        */
 /************************************************************************/
@@ -79,6 +80,16 @@ extern void OnURCHandler_BTGatrreq(const char* strURC, void* reserved);
 extern void OnURCHandler_BTGatewreq(const char* strURC, void* reserved);
 extern void OnURCHandler_BTpxpscon(const char* strURC, void* reserved);
 extern void OnURCHandler_BTfmpscon(const char* strURC, void* reserved);
+#ifdef __OCPU_RIL_BLE_CLIENT__
+extern void OnURCHandler_BTGatcscan(const char* strURC, void* reserved);
+extern void OnURCHandler_BTGatccon(const char* strURC, void* reserved);
+extern void OnURCHandler_BTGatcss(const char* strURC, void* reserved);
+extern void OnURCHandler_BTGatcgc(const char* strURC, void* reserved);
+extern void OnURCHandler_BTGatcgd(const char* strURC, void* reserved);
+extern void OnURCHandler_BTGatcrc(const char* strURC, void* reserved);
+extern void OnURCHandler_BTGatcrd(const char* strURC, void* reserved);
+extern void OnURCHandler_BTGatcn(const char* strURC, void* reserved);
+#endif
 #endif
 static void OnURCHandler_AudPlayInd(const char* strURC, void* reserved);
 extern void OnURCHandler_QCELLLocation(const char* strURC,void* reserved);
@@ -89,6 +100,18 @@ extern void OnURCHandler_QWDTMF( const char* strURC, void* reserved );
 extern void OnURCHandler_GPSCMD(const char* strURC, void* reserved);
 // NTP URC callback
 extern void OnURCHandler_NTPCMD(const char* strURC, void* reserved);
+#ifdef __OCPU_RIL_QLBS_SUPPORT__
+extern void OnURCHandler_QLBS(const char* strURC,void* reserved);
+#endif
+/*************** ***MQTT********************************************/
+static void OnURCHandler_MQTT_OPEN(const char* strURC, void* reserved);
+static void OnURCHandler_MQTT_CONN(const char* strURC, void* reserved);
+static void OnURCHandler_MQTT_SUB(const char* strURC, void* reserved);
+static void OnURCHandler_MQTT_PUB(const char* strURC, void* reserved);
+static void OnURCHandler_MQTT_TUNS(const char* strURC, void* reserved);
+static void OnURCHandler_MQTT_STATE(const char* strURC, void* reserved);
+static void OnURCHandler_MQTT_CLOSE(const char* strURC, void* reserved);
+static void OnURCHandler_MQTT_DISC(const char* strURC, void* reserved);
 
 /************************************************************************/
 /* Customer ATC URC callback                                          */
@@ -193,12 +216,22 @@ const static ST_URC_HDLENTRY m_AtURCHdlEntry[] = {
 
 
 #ifdef __OCPU_RIL_BLE_SUPPORT__
-    {"\r\n+QBTGATSCON:",                             OnURCHandler_BTGatscon},
-    {"\r\n+QBTGATWREQ:",                             OnURCHandler_BTGatwreq},
-    {"\r\n+QBTGATRREQ:",                             OnURCHandler_BTGatrreq},
-    {"\r\n+QBTGATEWREQ:",                            OnURCHandler_BTGatewreq},
-    {"\r\n+QBTPXPSCON:",                              OnURCHandler_BTpxpscon},
+    {"\r\n+QBTGATSCON:",                          OnURCHandler_BTGatscon},
+    {"\r\n+QBTGATWREQ:",                          OnURCHandler_BTGatwreq},
+    {"\r\n+QBTGATRREQ:",                          OnURCHandler_BTGatrreq},
+    {"\r\n+QBTGATEWREQ:",                         OnURCHandler_BTGatewreq},
+    {"\r\n+QBTPXPSCON:",                          OnURCHandler_BTpxpscon},
     {"\r\n+QBTFMPSCONSREG:",                      OnURCHandler_BTfmpscon},
+#ifdef __OCPU_RIL_BLE_CLIENT__
+	{"\r\n+QBTGATCSCAN:",						  OnURCHandler_BTGatcscan},
+    {"\r\n+QBTGATCCON:",                          OnURCHandler_BTGatccon},
+	{"\r\n+QBTGATCSS:",							  OnURCHandler_BTGatcss},
+    {"\r\n+QBTGATCGC:",                           OnURCHandler_BTGatcgc},
+    {"\r\n+QBTGATCGD:",                           OnURCHandler_BTGatcgd},
+	{"\r\n+QBTGATCRC:",							  OnURCHandler_BTGatcrc},
+    {"\r\n+QBTGATCRD:",                           OnURCHandler_BTGatcrd},
+    {"\r\n+QBTGATCN:",                            OnURCHandler_BTGatcn},
+#endif
 #endif
 
     // DTMF unsolicited response
@@ -210,6 +243,17 @@ const static ST_URC_HDLENTRY m_AtURCHdlEntry[] = {
 
 	//NTP unsolicited response
 	{"\r\n+QNTP:",							  	  OnURCHandler_NTPCMD},
+#ifdef __OCPU_RIL_QLBS_SUPPORT__
+    {"\r\n+QLBS:",							  	  OnURCHandler_QLBS},
+#endif
+    {"\r\n+QMTOPEN:",                             OnURCHandler_MQTT_OPEN},
+	{"\r\n+QMTCONN:",                             OnURCHandler_MQTT_CONN},
+	{"\r\n+QMTSUB:",                              OnURCHandler_MQTT_SUB},
+    {"\r\n+QMTPUB:",                              OnURCHandler_MQTT_PUB},
+	{"\r\n+QMTUNS:",                              OnURCHandler_MQTT_TUNS},
+	{"\r\n+QMTSTAT:",                             OnURCHandler_MQTT_STATE},
+	{"\r\n+QMTCLOSE:",                            OnURCHandler_MQTT_CLOSE},
+	{"\r\n+QMTDISC:",                             OnURCHandler_MQTT_DISC},
 };
 
 static void OnURCHandler_SIM(const char* strURC, void* reserved)
@@ -592,7 +636,7 @@ void OnURCHandler(const char* strURC, void* reserved)
     }
 
     // For undefined URCs
-    OnURCHandler_Undefined(strURC, reserved);
+    OnURCHandler_Undefined(strURC, reserved);//û�ж����URC����Ϣ���͵�main task��QL
 }
 
 /******************************************************************************
@@ -629,4 +673,263 @@ s32 Ql_RIL_IsURCStr(const char* strRsp)
     return 0;
 }
 
+static void OnURCHandler_MQTT_OPEN(const char* strURC, void* reserved)
+{
+	char* p1 = NULL;
+	char* p2 = NULL;
+	char strTmp[10];
+	
+	p1 = Ql_strstr(strURC, "+QMTOPEN:");
+	p1 += Ql_strlen("+QMTOPEN:");
+	p1++;
+	p2 = Ql_strstr(p1, "\r\n");
+	*p2 = '\0';
+
+	if (p1)
+	{
+		Ql_memset(strTmp, 0x0,	sizeof(strTmp));
+		QSDK_Get_Str(p1,strTmp,0);
+		mqtt_urc_param.connectid= Ql_atoi(strTmp);
+		
+		Ql_memset(strTmp, 0x0,	sizeof(strTmp));
+		QSDK_Get_Str(p1,strTmp,1);
+		mqtt_urc_param.result= Ql_atoi(strTmp);
+		
+		Ql_OS_SendMessage(URC_RCV_TASK_ID, MSG_ID_URC_INDICATION, URC_MQTT_OPEN, &mqtt_urc_param);	
+	}
+
+}
+static void OnURCHandler_MQTT_CONN(const char* strURC, void* reserved)
+{
+	char* p1 = NULL;
+	char* p2 = NULL;
+	char strTmp[10];
+	
+	p1 = Ql_strstr(strURC, "+QMTCONN:");
+	p1 += Ql_strlen("+QMTCONN:");
+	p1++;
+	p2 = Ql_strstr(p1, "\r\n");
+	*p2 = '\0';
+
+	if (p1)
+	{
+		Ql_memset(strTmp, 0x0,	sizeof(strTmp));
+		QSDK_Get_Str(p1,strTmp,0);
+		mqtt_urc_param.connectid= Ql_atoi(strTmp);
+		
+		Ql_memset(strTmp, 0x0,	sizeof(strTmp));
+		QSDK_Get_Str(p1,strTmp,1);
+		mqtt_urc_param.result= Ql_atoi(strTmp);
+		
+		Ql_memset(strTmp, 0x0,	sizeof(strTmp));
+		if(TRUE == QSDK_Get_Str(p1,strTmp,2))
+		{
+		  mqtt_urc_param.connect_code= Ql_atoi(strTmp);
+		}
+		else
+		{
+			mqtt_urc_param.connect_code= 255;
+		}
+		
+		Ql_OS_SendMessage(URC_RCV_TASK_ID, MSG_ID_URC_INDICATION, URC_MQTT_CONN, &mqtt_urc_param);
+	}
+}
+static void OnURCHandler_MQTT_SUB(const char* strURC, void* reserved)
+{
+	char* p1 = NULL;
+	char* p2 = NULL;
+	char strTmp[10];
+	char i;
+	
+	p1 = Ql_strstr(strURC, "+QMTSUB:");
+	p1 += Ql_strlen("+QMTSUB:");
+	p1++;
+	p2 = Ql_strstr(p1, "\r\n");
+	*p2 = '\0';
+
+	if (p1)
+	{
+		Ql_memset(strTmp, 0x0,	sizeof(strTmp));
+		QSDK_Get_Str(p1,strTmp,0);
+		mqtt_urc_param.connectid= Ql_atoi(strTmp);
+		
+		Ql_memset(strTmp, 0x0,	sizeof(strTmp));
+		QSDK_Get_Str(p1,strTmp,1);
+		mqtt_urc_param.msgid= Ql_atoi(strTmp);
+
+		Ql_memset(strTmp, 0x0,	sizeof(strTmp));
+		QSDK_Get_Str(p1,strTmp,2);
+		mqtt_urc_param.result= Ql_atoi(strTmp);
+
+		for(i=0;i<MQTT_MAX_TOPIC;i++)
+        {
+			Ql_memset(strTmp, 0x0,	sizeof(strTmp));
+     		if(TRUE == QSDK_Get_Str(p1,strTmp,(3+i)))
+     		{
+     		  mqtt_urc_param.sub_value[i]= Ql_atoi(strTmp);
+     		}
+     		else
+     		{
+     			mqtt_urc_param.sub_value[i]= 255;
+				break;
+     		}
+		}
+
+		Ql_OS_SendMessage(URC_RCV_TASK_ID, MSG_ID_URC_INDICATION, URC_MQTT_SUB, &mqtt_urc_param);	
+	}
+
+}
+static void OnURCHandler_MQTT_PUB(const char* strURC, void* reserved)
+{
+	char* p1 = NULL;
+	char* p2 = NULL;
+	char strTmp[10];
+
+	p1 = Ql_strstr(strURC, "+QMTPUB:");
+	p1 += Ql_strlen("+QMTPUB:");
+	p1++;
+	p2 = Ql_strstr(p1, "\r\n");
+	*p2 = '\0';
+	
+
+	if (p1)
+	{
+		Ql_memset(strTmp, 0x0,	sizeof(strTmp));
+		QSDK_Get_Str(p1,strTmp,0);
+		mqtt_urc_param.connectid= Ql_atoi(strTmp);
+		
+		Ql_memset(strTmp, 0x0,	sizeof(strTmp));
+		QSDK_Get_Str(p1,strTmp,1);
+		mqtt_urc_param.msgid= Ql_atoi(strTmp);
+
+		Ql_memset(strTmp, 0x0,	sizeof(strTmp));
+		QSDK_Get_Str(p1,strTmp,2);
+		mqtt_urc_param.result= Ql_atoi(strTmp);
+
+  		Ql_memset(strTmp, 0x0,	sizeof(strTmp));
+		if(TRUE == QSDK_Get_Str(p1,strTmp,3))
+		{
+		   mqtt_urc_param.pub_value= Ql_atoi(strTmp);
+		}
+		else
+		{
+			mqtt_urc_param.pub_value= 255;
+		}
+		
+		Ql_OS_SendMessage(URC_RCV_TASK_ID, MSG_ID_URC_INDICATION, URC_MQTT_PUB, &mqtt_urc_param);	
+	}
+}
+static void OnURCHandler_MQTT_TUNS(const char* strURC, void* reserved)
+{
+	char* p1 = NULL;
+	char* p2 = NULL;
+	char strTmp[10];
+	
+	p1 = Ql_strstr(strURC, "+QMTUNS:");
+	p1 += Ql_strlen("+QMTUNS:");
+	p1++;
+	p2 = Ql_strstr(p1, "\r\n");
+	*p2 = '\0';
+
+	if (p1)
+	{
+		Ql_memset(strTmp, 0x0,	sizeof(strTmp));
+		QSDK_Get_Str(p1,strTmp,0);
+		mqtt_urc_param.connectid= Ql_atoi(strTmp);
+		
+		Ql_memset(strTmp, 0x0,	sizeof(strTmp));
+		QSDK_Get_Str(p1,strTmp,1);
+		mqtt_urc_param.msgid= Ql_atoi(strTmp);
+
+		Ql_memset(strTmp, 0x0,	sizeof(strTmp));
+		QSDK_Get_Str(p1,strTmp,2);
+		mqtt_urc_param.result= Ql_atoi(strTmp);
+		
+		Ql_OS_SendMessage(URC_RCV_TASK_ID, MSG_ID_URC_INDICATION, URC_MQTT_TUNS, &mqtt_urc_param);	
+	}
+}
+
+static void OnURCHandler_MQTT_STATE(const char* strURC, void* reserved)
+{
+	char* p1 = NULL;
+	char* p2 = NULL;
+	char strTmp[10];
+	
+	p1 = Ql_strstr(strURC, "+QMTSTAT:");
+	p1 += Ql_strlen("+QMTSTAT:");
+	p1++;
+	p2 = Ql_strstr(p1, "\r\n");
+	*p2 = '\0';
+
+	if (p1)
+	{
+		Ql_memset(strTmp, 0x0,	sizeof(strTmp));
+		QSDK_Get_Str(p1,strTmp,0);
+		mqtt_urc_param.connectid= Ql_atoi(strTmp);
+
+		Ql_memset(strTmp, 0x0,	sizeof(strTmp));
+		QSDK_Get_Str(p1,strTmp,1);
+		mqtt_urc_param.mqtt_state= Ql_atoi(strTmp);
+		
+		Ql_OS_SendMessage(URC_RCV_TASK_ID, MSG_ID_URC_INDICATION, URC_MQTT_STATE, &mqtt_urc_param);	
+	}
+}
+static void OnURCHandler_MQTT_CLOSE(const char* strURC, void* reserved)
+{
+	char* p1 = NULL;
+	char* p2 = NULL;
+	char strTmp[10];
+	p1 = Ql_strstr(strURC, "+QMTCLOSE:");
+	p1 += Ql_strlen("+QMTCLOSE:");
+	p1++;
+	p2 = Ql_strstr(p1, "\r\n");
+	*p2 = '\0';
+
+	if (p1)
+	{
+		Ql_memset(strTmp, 0x0,	sizeof(strTmp));
+		QSDK_Get_Str(p1,strTmp,0);
+		mqtt_urc_param.connectid= Ql_atoi(strTmp);
+		
+		Ql_memset(strTmp, 0x0,	sizeof(strTmp));
+		QSDK_Get_Str(p1,strTmp,1);
+		mqtt_urc_param.msgid= Ql_atoi(strTmp);
+
+		Ql_memset(strTmp, 0x0,	sizeof(strTmp));
+		QSDK_Get_Str(p1,strTmp,2);
+		mqtt_urc_param.result= Ql_atoi(strTmp);
+		
+		Ql_OS_SendMessage(URC_RCV_TASK_ID, MSG_ID_URC_INDICATION, URC_MQTT_CLOSE, &mqtt_urc_param);	
+	}
+}
+
+static void OnURCHandler_MQTT_DISC(const char* strURC, void* reserved)
+{
+	char* p1 = NULL;
+	char* p2 = NULL;
+	char strTmp[10];
+	
+	p1 = Ql_strstr(strURC, "+QMTDISC:");
+	p1 += Ql_strlen("+QMTDISC:");
+	p1++;
+	p2 = Ql_strstr(p1, "\r\n");
+	*p2 = '\0';
+
+	if (p1)
+	{
+		Ql_memset(strTmp, 0x0,	sizeof(strTmp));
+		QSDK_Get_Str(p1,strTmp,0);
+		mqtt_urc_param.connectid= Ql_atoi(strTmp);
+		
+		Ql_memset(strTmp, 0x0,	sizeof(strTmp));
+		QSDK_Get_Str(p1,strTmp,1);
+		mqtt_urc_param.msgid= Ql_atoi(strTmp);
+
+		Ql_memset(strTmp, 0x0,	sizeof(strTmp));
+		QSDK_Get_Str(p1,strTmp,2);
+		mqtt_urc_param.result= Ql_atoi(strTmp);
+		
+		Ql_OS_SendMessage(URC_RCV_TASK_ID, MSG_ID_URC_INDICATION, URC_MQTT_DISC, &mqtt_urc_param);	
+	}
+}
 #endif  // __OCPU_RIL_SUPPORT__

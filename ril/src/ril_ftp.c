@@ -42,13 +42,14 @@
 #include "ril_util.h"
 #include "ril_ftp.h"
 #include "ril_network.h"
+
 #ifdef __OCPU_RIL_SUPPORT__ 
 
 #define RIL_FTP_DEBUG_ENABLE 0
 #if RIL_FTP_DEBUG_ENABLE > 0
 #define RIL_FTP_DEBUG_PORT  UART_PORT1
 static char DBG_Buffer[100];
-#define RIL_FTP_DEBUG(BUF,...)  debugf(Window21,__VA_ARGS__)//QL_TRACE_LOG(RIL_FTP_DEBUG_PORT,BUF,100,__VA_ARGS__)
+#define RIL_FTP_DEBUG(BUF,...)  QL_TRACE_LOG(RIL_FTP_DEBUG_PORT,BUF,100,__VA_ARGS__)
 #else
 #define RIL_FTP_DEBUG(BUF,...) 
 #endif

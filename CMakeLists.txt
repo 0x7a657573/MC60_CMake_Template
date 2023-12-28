@@ -51,6 +51,7 @@ set(SRC_FILES
         ril/src/ril_util.c
         ril/src/ril_atResponse.c
         ril/src/ril_ftp.c 
+        ril/src/ril_mqtt.c
 
         src/main.c        
         )

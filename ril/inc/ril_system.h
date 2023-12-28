@@ -170,5 +170,22 @@ s32 Ql_SecureData_Read(u8 index, u8* pBuffer, u32 len);
 *****************************************************************/
 s32 RIL_GetIMEI(char* imei);
 
+/*****************************************************************
+* Function:     QSDK_Get_Str 
+* 
+* Description:
+*               This function get strings based on the location of comma.
+* Parameters:
+*               None.
+* Return:        
+*               
+*
+*eg:src_string="GPRMC,235945.799,V,,,,,0.00,0.00,050180,,,N"
+*index =1 ,dest_string="235945.799"; return TRUE
+*index =,return FALSE
+*****************************************************************/
+bool QSDK_Get_Str(char *src_string,  char *dest_string, unsigned char index);
+s32 QSDK_Get_Strlen(const char *src_string, unsigned char index);
+
 #endif  //__RIL_SYSTEM_H__
 

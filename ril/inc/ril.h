@@ -53,12 +53,36 @@ typedef enum {
     URC_NEW_SMS_IND,            // Indication for new short message.
     URC_MODULE_VOLTAGE_IND,     // Indication for abnormal voltage of module supply power.
 	URC_ALARM_RING_IND,		    // Indication for clock alarm
+    URC_MQTT_OPEN,              // Indication for open a network for MQTT client.
+	URC_MQTT_CONN,              // Indication for requests a connection to MQTT server.
+	URC_MQTT_SUB,               // Indication for subscribe one or more topics.
+	URC_MQTT_PUB,               // Indication for publish messages to a servers.
+	URC_MQTT_TUNS,              // Indication for unsubscribe  one or more topics.
+	URC_MQTT_STATE,             // Indicate State Change in MQTT Link Layer.
+	URC_MQTT_CLOSE,             // Indication for Close a Client for MQTT Client.
+	URC_MQTT_DISC,              // Indication for Disconnect a Client from MQTT Server.
     URC_SYS_END = 100,
     /*****************************************/
     /* System URC definition end             */
     /*****************************************/
     URC_END
 }Enum_URCType;
+
+/******************************************************************************
+* Define mqtt param
+******************************************************************************/
+#define MQTT_MAX_TOPIC    (9)  //Users can configure other values
+typedef struct{
+  u32 connectid; //MQTT socket identifier. The range is 0-5.
+  u32 msgid;     //msgid
+  s32 result;    //Result of the command execution.
+  u8 mqtt_state; //mqtt status.
+  u8 connect_code;//Connect return code
+  u32 pub_value;    //If <result> is 1, it means the times of packet retransmission.  If <result> is 0 or 2, it will not be presented
+  u32 sub_value[MQTT_MAX_TOPIC];//If <result> is 0, it is a vector of granted QoS levels. if  the value is 128, indicating that the subscription was rejected by the server. 
+                                //If <result> is 1, it means the times of packet retransmission.
+                                //If <result> is 2, it will not be presented.
+}MQTT_Urc_Param_t;
 
 /******************************************************************************
 * Define URC struct

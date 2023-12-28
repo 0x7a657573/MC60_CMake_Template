@@ -380,5 +380,80 @@ s32 RIL_GetIMEI(char* imei)
     return Ql_RIL_SendATCmd(strAT, Ql_strlen(strAT), ATRsp_IMEI_Handler,(void*)imei, 0);
 }
 
+bool QSDK_Get_Str(char *src_string,  char *dest_string, unsigned char index)
+{
+    u32 SentenceCnt = 0;
+    u32 ItemSum = 0;
+    u32 ItemLen = 0, Idx = 0;
+    u32 len = 0;
+    unsigned int i = 0;
+    
+    if (src_string ==NULL)
+    {
+        return FALSE;
+    }
+    len = Ql_strlen(src_string);
+	for ( i = 0; i < len; i++)
+	{
+		if (*(src_string + i) == ',')
+		{
+			ItemLen = i - ItemSum - SentenceCnt;
+			ItemSum  += ItemLen;
+            if (index == SentenceCnt)
+            {
+                if (ItemLen == 0)
+                {
+                    return FALSE;
+                }
+		        else
+                {
+                    Ql_memcpy(dest_string, src_string + Idx, ItemLen);
+                    *(dest_string + ItemLen) = '\0';
+                    return TRUE;
+                }
+            }
+			SentenceCnt++; 	 
+			Idx = i + 1;
+		}		
+	}
+    if (index == SentenceCnt && (len - Idx) != 0)
+    {
+        Ql_memcpy(dest_string, src_string + Idx, len - Idx);
+        *(dest_string + len) = '\0';
+        return TRUE;
+    }
+    else 
+    {
+        return FALSE;
+    }
+}
+
+//<This function is used to get the length based on comma.
+//<eg:QSDK_Get_Strlen("h,e,l,l,o\0",3); return value is 6.
+s32 QSDK_Get_Strlen(const char *src_string, unsigned char index)
+{
+    u32 Sentencelen = 0;
+    u32 Idx = 0;
+    u32 len = 0;
+    unsigned int i = 0;
+    
+    if ((src_string == NULL)||(0 == index))
+    {
+        return FALSE;
+    }
+    len = Ql_strlen(src_string);
+	for ( i = 0; i < len; i++)
+	{
+		if (*(src_string + i) == ',')
+		{
+			Idx++;
+		}	
+        Sentencelen++;    
+        if(index == Idx)
+        {
+            return Sentencelen;
+        }
+	}
+}
 #endif  //__OCPU_RIL_SUPPORT__
 
